@@ -1,55 +1,61 @@
-/* RESET & BASE */
+/* BASE */
 * {
-  margin: 0; padding: 0; box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 body {
-  font-family: "Montserrat", sans-serif;
-  background-color: #fcf8f1; /* crème très clair */
-  color: #5a4a3b; /* marron doux */
-  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #fcf8f1;
+  color: #5a4a3b;
+  line-height: 1.6;
   overflow-x: hidden;
-  scroll-behavior: smooth;
+  
 }
 a {
   text-decoration: none;
   color: inherit;
 }
+img {
+  max-width: 100%;
+  display: block;
+}
 
-/* NAVBAR */
+/* HEADER */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: fixed;
   top: 0; left: 0; right: 0;
   background: #fcf8f1;
   height: 80px;
   padding: 0 20px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 0.07);
   z-index: 1101;
-  user-select: none;
-}
+  position: relative; 
 
-/* Header sections */
+}
 .header-left, .header-center, .header-right {
   display: flex;
   align-items: center;
 }
-
-/* Centrer le logo horizontalement */
 .header-center {
-  flex: 2;
-  justify-content: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
-/* Logo image centré et taille adaptée */
+.logo-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .logo-image {
   height: 120px;
   object-fit: contain;
   user-select: none;
 }
-
-/* Hamburger */
 .hamburger {
   width: 32px;
   height: 24px;
@@ -57,144 +63,113 @@ header {
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  z-index: 1110;
-  position: relative;
 }
 .hamburger span {
-  display: block;
   height: 3.5px;
-  background: #7f0000; /* beige moyen chaud */
+  background: #7f0000;
   border-radius: 3px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center;
-  box-shadow: 0 1px 1px rgb(0 0 0 / 0.1);
+  transition: all 0.4s ease;
 }
-.hamburger.active span:nth-child(1) {
+.hamburger.open span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
-  background: #7a6e58; /* bordeaux */
 }
-.hamburger.active span:nth-child(2) {
+.hamburger.open span:nth-child(2) {
   opacity: 0;
 }
-.hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-  background: #7a6e58;
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
 }
-
-/* Focus accessible */
-.hamburger:focus {
-  outline: 2px solid #7a6e58;
-  outline-offset: 4px;
-}
-
-/* Icônes à droite, petites, alignées horizontalement */
 .header-right {
   gap: 14px;
 }
-
 .header-right .icon-link img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  filter: invert(33%) sepia(19%) saturate(313%) hue-rotate(21deg) brightness(95%) contrast(85%);
-  transition: filter 0.3s ease;
-  user-select: none;
+  width: 26px;
+  height: 26px;
 }
-.header-right .icon-link:hover img,
-.header-right .icon-link:focus img {
-  filter: invert(39%) sepia(60%) saturate(450%) hue-rotate(0deg) brightness(90%) contrast(95%);
+.icon {
+  width: 26px;
+  height: 26px;
+  fill: #7f0000;
 }
 
-/* Lien "Contact" texte */
-.header-right .icon-link:first-child {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #7f0000; /* beige chaud */
-  padding: 4px 6px;
-  border-radius: 8px;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-.header-right .icon-link:first-child:hover,
-.header-right .icon-link:first-child:focus {
-  background: #7a6e58;
-  color: #7f0000;
-  outline: none;
-}
 
-/* Side Menu Drawer */
+/* NAVIGATION */
 nav {
   position: fixed;
-  top: 0; left: -280px;
+  top: 0;
+  left: -280px;
   width: 280px;
   height: 100vh;
-  background: #d7bc8a;
-  padding-top: 60px;
-  box-shadow: 4px 0 16px rgb(0 0 0 / 0.2);
-  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(to bottom, #d7bc8a, #c8a96a);
+  padding-top: 80px;
+  transition: left 0.35s ease;
   z-index: 1100;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.1);
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  user-select: none;
 }
+
 nav.active {
   left: 0;
 }
+
 nav ul {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-}
-nav ul li {
-  border-bottom: 1px solid #a1825a;
-}
-nav ul li a {
-  display: block;
-  padding: 20px 32px;
-  font-weight: 600;
-  color: #fff7f0;
-  font-size: 1.15rem;
-  transition: background 0.3s ease, color 0.3s ease;
-  user-select: none;
-}
-nav ul li a:hover,
-nav ul li a:focus {
-  background: #664d1f;
-  outline: none;
-  color: #fff8e5;
+  padding: 0;
+  margin: 0;
 }
 
-/* Dropdown inside side menu */
+nav ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+nav ul li a {
+  display: block;
+  padding: 18px 28px;
+  font-weight: 600;
+  color: #fffaf2;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+nav ul li a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  padding-left: 36px;
+}
+
 nav ul li.dropdown > a::after {
   content: " ▸";
   float: right;
-  font-weight: 900;
+  font-weight: bold;
+  font-size: 1rem;
   transition: transform 0.3s ease;
 }
+
 nav ul li.dropdown.open > a::after {
   transform: rotate(90deg);
 }
+
 nav ul li.dropdown ul {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s ease;
-  background: #c2ad78;
-}
-nav ul li.dropdown.open ul {
-  max-height: 400px; /* suffisant pour sous-menu */
-}
-nav ul li.dropdown ul li a {
-  padding-left: 54px;
-  font-weight: 500;
-  font-size: 1.05rem;
-  color: #fff7f0;
-}
-nav ul li.dropdown ul li a:hover,
-nav ul li.dropdown ul li a:focus {
-  background: #ad9948;
-  color: #fff8e5;
+  transition: max-height 0.3s ease;
+  background: rgba(0,0,0,0.05);
 }
 
-/* Overlay */
+nav ul li.dropdown.open ul {
+  max-height: 400px;
+}
+
+nav ul li.dropdown ul li a {
+  padding-left: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff3e6;
+}
+
+
+/* OVERLAY */
 .overlay {
   position: fixed;
   top:0; left:0; right:0; bottom:0;
@@ -203,12 +178,12 @@ nav ul li.dropdown ul li a:focus {
   visibility: hidden;
   transition: opacity 0.35s ease;
   z-index: 1090;
-  user-select: none;
 }
 .overlay.active {
   opacity: 1;
   visibility: visible;
 }
+
 
 
 .menu a {
@@ -458,32 +433,6 @@ footer {
 }
 
 @media (max-width: 480px) {
-  header {
-    height: 70px;
-    padding: 0 12px;
-  }
-
-  .logo-image {
-    height: 80px;
-  }
-
-  .hamburger {
-    width: 28px;
-    height: 20px;
-  }
-
-  .hamburger span {
-    height: 3px;
-  }
-
-  nav {
-    width: 220px;
-  }
-
-  nav ul li a {
-    font-size: 1rem;
-    padding: 16px 22px;
-  }
 
   .container-hero h1 {
     font-size: 1.8rem;

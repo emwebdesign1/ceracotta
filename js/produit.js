@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Produit gallery thumbnails
+  // --- Image principale + miniatures
   const mainImage = document.querySelector(".main-image");
   const thumbnails = document.querySelectorAll(".thumbnail");
   thumbnails.forEach((thumb) => {
@@ -11,130 +11,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Carrousel Avis Clients
-  const reviewsWrapper = document.querySelector(".reviews-wrapper > div");
-  const reviewPrevBtn = document.querySelector(".reviews-carousel .carousel-btn.prev");
-  const reviewNextBtn = document.querySelector(".reviews-carousel .carousel-btn.next");
-
-  let reviewIndex = 0;
-  const reviewItemWidth = 300 + 16; // 280 + gap approx
-
-  reviewPrevBtn.addEventListener("click", () => {
-    reviewIndex = Math.max(reviewIndex - 1, 0);
-    reviewsWrapper.style.transform = `translateX(-${reviewIndex * reviewItemWidth}px)`;
-  });
-
-  reviewNextBtn.addEventListener("click", () => {
-    const maxIndex = reviewsWrapper.children.length - 3; // afficher 3 à la fois
-    reviewIndex = Math.min(reviewIndex + 1, maxIndex);
-    reviewsWrapper.style.transform = `translateX(-${reviewIndex * reviewItemWidth}px)`;
-  });
-
-  // Carrousel "Tu aimerais aussi"
+  // --- Carrousel "Tu aimerais aussi"
   const carousel = document.querySelector(".aimerais-aussi .carousel");
   const btnLeft = document.querySelector(".aimerais-aussi .carousel-btn.left");
   const btnRight = document.querySelector(".aimerais-aussi .carousel-btn.right");
 
-  btnLeft.addEventListener("click", () => {
+  btnLeft?.addEventListener("click", () => {
     carousel.scrollBy({ left: -240, behavior: "smooth" });
   });
 
-  btnRight.addEventListener("click", () => {
+  btnRight?.addEventListener("click", () => {
     carousel.scrollBy({ left: 240, behavior: "smooth" });
   });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btnLeft = document.querySelector(".aimerais-aussi .carousel-btn.left");
-  const btnRight = document.querySelector(".aimerais-aussi .carousel-btn.right");
-  const carousel = document.querySelector(".aimerais-aussi .carousel");
-
-  btnLeft.addEventListener("click", () => {
-    carousel.scrollBy({
-      left: -240,
-      behavior: "smooth"
-    });
-  });
-
-  btnRight.addEventListener("click", () => {
-    carousel.scrollBy({
-      left: 240,
-      behavior: "smooth"
-    });
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const dots = document.querySelectorAll('.accordion-navigation .dot');
-  const slider = document.querySelector('.accordion-slider');
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-      slider.style.transform = `translateX(-${index * 50}%)`;
-      dots.forEach(d => d.classList.remove('active'));
-      dot.classList.add('active');
-    });
-  });
-});
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Slider Caractéristiques par 2
-  const dots = document.querySelectorAll('.accordion-navigation .dot');
-  const slider = document.querySelector('.icons-banner');
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-      slider.style.transform = `translateX(-${index * 50}%)`;
-      dots.forEach(d => d.classList.remove('active'));
-      dot.classList.add('active');
-    });
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
+  // --- Slider Caractéristiques (2 éléments par slide avec dots)
   const slider = document.querySelector('.icons-banner');
   const dots = document.querySelectorAll('.accordion-navigation .dot');
   let currentSlide = 0;
-  const totalSlides = 2; // 4 items, 2 par slide
-
+  const totalSlides = Math.ceil(slider.children.length / 2); // Dynamique
   function goToSlide(index) {
-    slider.style.transform = `translateX(-${index * 50}%)`; // 50% = largeur de 2 items
-    dots.forEach(d => d.classList.remove('active'));
+    slider.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(dot => dot.classList.remove('active'));
     dots[index].classList.add('active');
     currentSlide = index;
   }
 
-  dots.forEach((dot, idx) => {
+  dots.forEach((dot, index) => {
     dot.addEventListener('click', () => {
-      goToSlide(idx);
+      goToSlide(index);
       resetAutoSlide();
     });
   });
 
-  // Auto slide
+  // --- Auto-slide toutes les 4 secondes
   let autoSlide = setInterval(() => {
     let next = (currentSlide + 1) % totalSlides;
     goToSlide(next);
-  }, 3500);
+  }, 4000);
 
   function resetAutoSlide() {
     clearInterval(autoSlide);
     autoSlide = setInterval(() => {
       let next = (currentSlide + 1) % totalSlides;
       goToSlide(next);
-    }, 3500);
+    }, 4000);
   }
 
   goToSlide(0);
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+  // --- Menu burger + side panels
   const hamburger = document.getElementById("hamburger");
   const nav = document.getElementById("side-menu");
   const overlay = document.getElementById("overlay");
-  const scrollTopBtn = document.getElementById("scroll-top");
 
   const sidePanels = {
     compte: document.getElementById("panel-compte"),
@@ -193,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", closeAllSidePanels)
   );
 
+  // --- Déroulant collections
   const dropdown = document.querySelector(".dropdown");
   const link = document.getElementById("collections-link");
   link?.addEventListener("click", (e) => {
@@ -200,44 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
     dropdown?.classList.toggle("open");
   });
 
-  const sections = document.querySelectorAll(".section");
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  sections.forEach(section => observer.observe(section));
-
-  if (scrollTopBtn) {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 300) {
-        scrollTopBtn.classList.add("show");
-      } else {
-        scrollTopBtn.classList.remove("show");
-      }
-    });
-
-    scrollTopBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
-
-  const slider = document.querySelector('.avis-slider');
-  const btnPrev = document.getElementById('avis-prev');
-  const btnNext = document.getElementById('avis-next');
-
-  btnPrev?.addEventListener('click', () => {
-    slider.scrollBy({ left: -320, behavior: 'smooth' });
-  });
-
-  btnNext?.addEventListener('click', () => {
-    slider.scrollBy({ left: 320, behavior: 'smooth' });
-  });
-
-  document.querySelector('.cta-button')?.addEventListener('click', function(e) {
+  // --- Scroll vers section univers (page d’accueil)
+  document.querySelector('.cta-button')?.addEventListener('click', function (e) {
     e.preventDefault();
     const target = document.getElementById('univers');
     if (target) {

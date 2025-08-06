@@ -10,6 +10,7 @@ body {
   color: #5a4a3b;
   line-height: 1.6;
   overflow-x: hidden;
+  
 }
 a {
   text-decoration: none;
@@ -25,22 +26,26 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: fixed;
   top: 0; left: 0; right: 0;
   background: #fcf8f1;
   height: 80px;
   padding: 0 20px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 0.07);
   z-index: 1101;
+  position: relative; 
+
 }
 .header-left, .header-center, .header-right {
   display: flex;
   align-items: center;
 }
 .header-center {
-  flex: 1;
-  justify-content: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
+
 .logo-link {
   display: flex;
   justify-content: center;
@@ -89,7 +94,6 @@ header {
 
 
 /* NAVIGATION */
-/* NAVIGATION - STYLE INTÉRIEUR AMÉLIORÉ */
 nav {
   position: fixed;
   top: 0;
@@ -97,7 +101,7 @@ nav {
   width: 280px;
   height: 100vh;
   background: linear-gradient(to bottom, #d7bc8a, #c8a96a);
-  padding-top: 80px; /* pour éviter d’être sous le header */
+  padding-top: 80px;
   transition: left 0.35s ease;
   z-index: 1100;
   box-shadow: 2px 0 8px rgba(0,0,0,0.1);
@@ -183,7 +187,7 @@ nav ul li.dropdown ul li a {
 /* HERO */
 .hero {
   position: relative;
-  margin-top: 80px;
+  margin-top: 0px;
 }
 .hero-image {
   width: 100%;
@@ -237,34 +241,40 @@ nav ul li.dropdown ul li a {
   background-color: #fcf8f1;
 }
 
-/* UNIVERS */
+/* UNIVERS */   
 .univers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  align-items: stretch;
 }
+
 .univers-item {
   display: block;
-  height: auto;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
 
 .univers-item img {
   width: 100%;
-  height: 100%; /* prend toute la hauteur du parent */
+  height: 100%;
   object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   display: block;
 }
 
+.univers-item:hover {
+  transform: scale(1.02);
+}
+
+
+
 .univers-item h3 {
-  margin-top: 1rem;
   font-weight: 600;
   font-size: 1.2rem;
   color: #7f0000;
-}
-.univers-item:hover {
-  transform: scale(1.02);
 }
 
 /* CARACTÉRISTIQUES */
@@ -450,7 +460,7 @@ footer {
 }
 .univers-item img {
   width: 100%;
-  height: 350px; /* ou la hauteur que tu veux */
+  height: 350px; 
   object-fit: cover;
   border-radius: 6px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
@@ -518,13 +528,41 @@ footer {
     flex-direction: column;
     gap: 8px;
   }
+
+
+  .avis-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .avis-slider {
+    max-width: 100%;
+    overflow-x: scroll;
+    padding: 0 10px;
+  }
+
+  .avis-list {
+    gap: 16px;
+  }
+
+  .avis-item {
+    flex: 0 0 90%;
+    max-width: 90%;
+    font-size: 0.95rem;
+  }
+
+  .avis-arrow {
+    display: none; /* tu peux les rendre visibles si tu préfères */
+  }
 }
+
 
 #univers {
-  scroll-margin-top: 100px; /* compense le header fixe */
+  scroll-margin-top: 100px; 
 }
 
-/* Modern style for side panels */
+
 .side-panel form {
   display: flex;
   flex-direction: column;
@@ -556,3 +594,5 @@ footer {
   color: #7f0000;
   text-decoration: underline;
 }
+
+

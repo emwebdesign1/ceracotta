@@ -338,47 +338,65 @@ details > p {
 .carac-slider-section {
   margin: 2rem auto 1.5rem auto;
   max-width: 420px;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px #e7d8c4;
-  padding: 24px 0 10px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border: none;
 }
 
 .icons-banner {
   display: flex;
-  transition: transform 0.5s ease;
-  width: 200%;
-  max-width: 100%; /* <-- Ajoute ça */
-  overflow: hidden; /* <-- garde ça */
-  justify-content: center; /* <-- Ajoute ça pour centrer le contenu */
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem 0;
+  background-color: transparent;
+  border: none;
+  max-width: 100%;
+  overflow: visible;
+  transform: none !important;
+}
+
+.icons-banner {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 200%; /* 2 slides */
+}
+
+.slide {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 
 .icon-item {
-  flex: 0 0 50%;
-  max-width: 50%; /* Ajoute ça */
+  flex: 0 0 100px;
+  max-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-
 .icon-item img {
-  width: 54px;
-  height: 54px;
-  object-fit: contain;
+  width: 44px;
+  height: 44px;
   margin-bottom: 10px;
 }
 
 .icon-item p {
-  font-size: 0.98rem;
-  color: #7f0000;
-  font-weight: 600;
+  font-size: 0.9rem;
+  color: #5a4a3b;
+  font-weight: 500;
   margin: 0;
-  word-break: break-word; /* Ajoute ça */
-  max-width: 120px; /* Facultatif : pour forcer une largeur propre */
-  text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
 }
+
+
 
 .icons-banner-wrapper {
   width: 100%;

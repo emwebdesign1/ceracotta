@@ -1,3 +1,14 @@
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+
 header {
   display: flex;
   align-items: center;
@@ -66,7 +77,7 @@ header {
 
 
 /* NAVIGATION */
-/* NAVIGATION - STYLE INTÉRIEUR AMÉLIORÉ */
+
 nav {
   position: fixed;
   top: 0;
@@ -74,7 +85,7 @@ nav {
   width: 280px;
   height: 100vh;
   background: linear-gradient(to bottom, #d7bc8a, #c8a96a);
-  padding-top: 80px; /* pour éviter d’être sous le header */
+  padding-top: 80px; 
   transition: left 0.35s ease;
   z-index: 1100;
   box-shadow: 2px 0 8px rgba(0,0,0,0.1);
@@ -178,10 +189,14 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 48px;
-  padding: 0 60px;
-  justify-items: center;
+  padding: 0 5vw; /* plus fluide selon la largeur d'écran */
+  justify-items: stretch; /* pour que les cards prennent toute la largeur dispo */
   margin-top: 20px;
+  max-width: 1600px; /* limite pour très grands écrans */
+  margin-left: auto;
+  margin-right: auto;
 }
+
 
 .product-card {
   border: 1px solid #ddd;
@@ -192,6 +207,7 @@ body {
   background-color: #fff;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+
 
 .product-image {
   width: 100%;
@@ -248,17 +264,24 @@ body {
 .sort-filter-container select {
   padding: 8px 16px;
   border-radius: 24px;
-  border: 1px solid #ccc;
+  border: 2px solid #7f0000;
   background-color: #fff;
+  color: #7f0000;
   font-family: 'Urbanist', sans-serif;
   font-size: 14px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .sort-filter-container select:focus {
-  border-color: #e7d8c4;
+  border-color: #7f0000;
   outline: none;
 }
+
+.sort-filter-container option {
+  color: #7f0000;
+}
+
 
 .load-more-container {
   text-align: center;
@@ -279,6 +302,17 @@ body {
 .load-more:hover {
   background-color: #5a0000;
 }
+
+
+.conditions-container {
+  max-width: 1200px;
+  margin: 100px auto 60px;
+  padding: 0 40px;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+
 
 /* ========== RESPONSIVE POUR TÉLÉPHONES ========== */
 @media screen and (max-width: 768px) {
@@ -327,3 +361,13 @@ body {
     margin-top: 12px;
   }
 }
+
+@media (min-width: 1600px) {
+  .conditions-container {
+    max-width: 1400px;
+    font-size: 1.05rem;
+  }
+}
+
+
+
