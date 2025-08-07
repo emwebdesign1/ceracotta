@@ -1,3 +1,5 @@
+// === PRODUIT.JS avec 2 caractéristiques par slide ===
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- Image principale + miniatures
   const mainImage = document.querySelector(".main-image");
@@ -24,40 +26,34 @@ document.addEventListener("DOMContentLoaded", () => {
     carousel.scrollBy({ left: 240, behavior: "smooth" });
   });
 
-  // --- Slider Caractéristiques (2 éléments par slide avec dots)
-  const slider = document.querySelector('.icons-banner');
-  const dots = document.querySelectorAll('.accordion-navigation .dot');
-  let currentSlide = 0;
-  const totalSlides = Math.ceil(slider.children.length / 2); // Dynamique
-  function goToSlide(index) {
-    slider.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[index].classList.add('active');
-    currentSlide = index;
-  }
+// --- Slider caractéristiques 2 par slide ---
+const slider = document.querySelector(".icons-banner-slider");
+const slides = document.querySelectorAll(".icons-banner-slider .slide");
+const dots = document.querySelectorAll(".accordion-navigation .dot");
 
-  dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-      goToSlide(index);
-      resetAutoSlide();
-    });
+let currentIndex = 0;
+
+// Met à jour le slider en affichant la slide demandée (toujours 2 icônes par slide)
+function updateSlider(index) {
+  slider.style.transform = `translateX(-${index * 100}%)`;
+  dots.forEach(dot => dot.classList.remove("active"));
+  if (dots[index]) dots[index].classList.add("active");
+}
+
+// Ajoute un event sur chaque dot pour changer de slide
+dots.forEach((dot, index) => {
+  dot.addEventListener("click", () => {
+    currentIndex = index;
+    updateSlider(index);
   });
+});
 
-  // --- Auto-slide toutes les 4 secondes
-  let autoSlide = setInterval(() => {
-    let next = (currentSlide + 1) % totalSlides;
-    goToSlide(next);
-  }, 4000);
+// Responsive : recalcule la position au resize (pas besoin de recalculer la largeur, le % fonctionne toujours)
+window.addEventListener("resize", () => updateSlider(currentIndex));
 
-  function resetAutoSlide() {
-    clearInterval(autoSlide);
-    autoSlide = setInterval(() => {
-      let next = (currentSlide + 1) % totalSlides;
-      goToSlide(next);
-    }, 4000);
-  }
+// Initialise l'affichage
+updateSlider(currentIndex);
 
-  goToSlide(0);
 
   // --- Menu burger + side panels
   const hamburger = document.getElementById("hamburger");
@@ -130,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Scroll vers section univers (page d’accueil)
-  document.querySelector('.cta-button')?.addEventListener('click', function (e) {
+  document.querySelector('.cta-button')?.addEventListener('click', function(e) {
     e.preventDefault();
     const target = document.getElementById('univers');
     if (target) {

@@ -29,6 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
         priceValue: 49.90,
         colors: ["#D4AF37", "#FFFFFF"],
         image: "/images/bols.png"
+      },
+           {
+        name: "Assiette dorée brillante",
+        price: "49.90 CHF",
+        priceValue: 49.90,
+        colors: ["#D4AF37", "#FFFFFF"],
+        image: "/images/bols.png"
       }
     ];
 

@@ -32,7 +32,7 @@ header {
   padding: 0 20px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 0.07);
   z-index: 1101;
-  position: relative; 
+  position: fixed; 
 
 }
 .header-left, .header-center, .header-right {
@@ -386,7 +386,7 @@ footer {
   }
 
   .logo-image {
-    height: 90px;
+    height: 100px;
   }
 
   nav ul li a {
