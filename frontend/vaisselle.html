@@ -116,7 +116,12 @@
   </div>
 
   
-  <script src="js/vaisselle.js" defer></script>
+  <script type="module">
+  import { mountShell } from './js/ui/shell.js';
+  mountShell();
+  import './js/pages/vaisselle.page.js';
+</script>
+
 
 </body>
 

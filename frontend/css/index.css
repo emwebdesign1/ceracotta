@@ -597,3 +597,130 @@ footer {
 }
 
 
+
+/* === Toast global (ajout au panier, erreurs, etc.) === */
+.toast-wrap {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #7f0000;      /* bordeaux Céracotta */
+  color: #fff;
+  border-radius: 14px;
+  padding: 12px 16px;
+  min-width: 240px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.18);
+  animation: toast-in .25s ease-out;
+}
+
+.toast .icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  opacity: .92;
+}
+
+.toast .msg {
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+.toast .sm {
+  font-size: .9rem;
+  opacity: .9;
+}
+
+.toast .close {
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: .85;
+}
+.toast .close:hover { opacity: 1; }
+
+@keyframes toast-in {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Badge panier global */
+#open-panier { position: relative; }
+#open-panier .cart-badge{
+  position:absolute; top:-6px; right:-8px;
+  background:#7f0000; color:#fff; border-radius:999px;
+  font-size:12px; line-height:1; padding:2px 6px; min-width:18px; text-align:center;
+}
+
+
+/* === Cart side-panel (beau) === */
+.side-panel.cart-panel { padding: 26px 22px 24px; background:#fcf8f1; }
+
+.cart-panel .cart-header {
+  display:flex; align-items:baseline; gap:10px; margin-bottom:14px;
+}
+.cart-panel .cart-header h2 {
+  font-family:'Playfair Display', serif; color:#7f0000; font-size:1.6rem; margin:0;
+}
+.cart-panel .cart-count { color:#7f0000; opacity:.75; font-weight:600; }
+
+.cart-panel .cart-empty {
+  background:#fff; border:1px solid rgba(127,0,0,.08); border-radius:16px;
+  padding:22px; text-align:center; color:#6a5f55;
+}
+
+.cart-panel .cart-list { list-style:none; padding:0; margin:10px 0 6px; display:flex; flex-direction:column; gap:12px; }
+.cart-panel .cart-item {
+  display:grid; grid-template-columns:64px 1fr 28px; gap:12px;
+  background:#fff; border:1px solid rgba(127,0,0,.08); border-radius:16px; padding:10px 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.04);
+}
+.cart-panel .thumb { width:64px; height:64px; border-radius:12px; overflow:hidden; background:#f4f1ec; }
+.cart-panel .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.cart-panel .thumb .ph { width:100%; height:100%; background:linear-gradient(135deg,#efe9df,#f7f1e9); }
+
+.cart-panel .meta { display:grid; grid-template-columns:1fr auto; row-gap:6px; }
+.cart-panel .title { font-weight:700; color:#2e2e2e; }
+.cart-panel .variant { font-size:.92rem; color:#7b6c60; }
+.cart-panel .price { justify-self:end; color:#7f0000; font-weight:700; }
+
+.cart-panel .qty-controls {
+  display:inline-flex; align-items:center; gap:10px; margin-top:4px;
+  background:#fcf8f1; border:1px solid rgba(127,0,0,.12); border-radius:999px; padding:4px 8px;
+  width: fit-content;
+}
+.cart-panel .qty { width:26px; height:26px; border-radius:50%; border:none; cursor:pointer;
+  background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.06); font-weight:700; }
+.cart-panel .qty:active { transform: translateY(1px); }
+.cart-panel .qty-val { min-width:18px; text-align:center; font-weight:700; color:#3a2f28; }
+
+.cart-panel .rm {
+  background:transparent; border:none; color:#a38a7a; font-size:20px; align-self:start; cursor:pointer;
+}
+.cart-panel .rm:hover { color:#7f0000; }
+
+.cart-panel .cart-summary {
+  margin-top:12px; background:#fff; border:1px solid rgba(127,0,0,.08); border-radius:16px; padding:16px;
+}
+.cart-panel .cart-summary .row { display:flex; justify-content:space-between; align-items:center; }
+.cart-panel .cart-summary .hint { font-size:.9rem; color:#7b6c60; margin:8px 0 12px; }
+
+.cart-panel .actions { display:flex; gap:10px; }
+.cart-panel .btn {
+  flex:1; padding:12px 14px; border-radius:12px; cursor:pointer; border:1px solid transparent; font-weight:700;
+}
+.cart-panel .btn.primary { background:#7f0000; color:#fff; }
+.cart-panel .btn.primary:hover { background:#5f0000; }
+.cart-panel .btn.ghost { background:#fff; color:#7f0000; border-color:#7f0000; }
+.cart-panel .btn.ghost:hover { background:#fdf2f2; }

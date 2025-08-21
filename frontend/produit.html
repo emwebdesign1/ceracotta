@@ -69,7 +69,7 @@
 
   <main class="product-page">
     <div class="product-gallery">
-      <img src="images/test2.jpg" alt="Assiette en céramique" class="main-image" />
+      <img src="images/test2.png" alt="Assiette en céramique" class="main-image" />
       <div class="thumbnail-container">
         <img src="images/bols.png" class="thumbnail selected" alt="Vue 1" />
         <img src="images/bols.png" class="thumbnail" alt="Vue 2" />
@@ -247,7 +247,12 @@
   </div>
 
 
-  <script src="js/produit.js" defer></script>
+  <script type="module">
+  import { mountShell } from './js/ui/shell.js';
+  mountShell();
+  import './js/pages/produit.page.js';
+</script>
+
 </body>
 
 </html>

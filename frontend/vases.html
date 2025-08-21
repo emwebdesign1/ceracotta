@@ -113,7 +113,12 @@
     <h2>Votre panier</h2>
     <p>Votre panier est vide.</p>
 
-  <script src="js/vaisselle.js" defer></script>
+  <script type="module">
+  import { mountShell } from './js/ui/shell.js';
+  mountShell();
+  import './js/pages/vases.page.js';
+</script>
+
 
 </body>
 

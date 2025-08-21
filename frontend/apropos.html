@@ -123,6 +123,11 @@
     </div>
   </footer>
 
-  <script src="js/index.js"></script>
+  <script type="module">
+  import { mountShell } from './js/ui/shell.js';
+  mountShell();
+  import './js/pages/apropos.page.js';
+</script>
+
 </body>
 </html>
