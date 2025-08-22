@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { verifyJWT } from '../middleware/auth.js';
+import { myCart, addItem, updateQty, removeItem, clearCart } from '../controllers/carts.controller.js';
+const r = Router();
+r.use(verifyJWT);
+r.get('/my', myCart);
+r.post('/add', addItem);
+r.patch('/update', updateQty);
+r.delete('/item/:id', removeItem);
+r.delete('/clear', clearCart);
+export default r;

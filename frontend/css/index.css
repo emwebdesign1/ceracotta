@@ -724,3 +724,15 @@ footer {
 .cart-panel .btn.primary:hover { background:#5f0000; }
 .cart-panel .btn.ghost { background:#fff; color:#7f0000; border-color:#7f0000; }
 .cart-panel .btn.ghost:hover { background:#fdf2f2; }
+
+/* Auth panel */
+#panel-compte .auth-tabs{ display:flex; gap:8px; margin-bottom:10px; }
+#panel-compte .auth-tabs .tab{ border:1px solid rgba(127,0,0,.2); background:#fff; color:#7f0000; padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:700; }
+#panel-compte .auth-tabs .tab.active{ background:#7f0000; color:#fff; border-color:#7f0000; }
+#panel-compte .auth-view{ display:none; }
+#panel-compte .auth-view.active{ display:block; }
+#panel-compte label{ display:flex; flex-direction:column; gap:6px; margin:8px 0; color:#7b6c60; }
+#panel-compte input{ padding:10px 12px; border:1px solid #e7e0d7; border-radius:12px; }
+#panel-compte .grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+#panel-compte .btn{ background:#7f0000; color:#fff; border:0; border-radius:12px; padding:10px 14px; cursor:pointer; font-weight:700; }
+#panel-compte .msg{ color:#7b6c60; margin-top:8px; }

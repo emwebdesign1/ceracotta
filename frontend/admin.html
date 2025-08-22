@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin – Céracotta</title>
+  <link rel="stylesheet" href="./css/admin.css"/>
+</head>
+<body class="page-admin">
+  <header class="ad-header">
+    <a class="brand" href="./index.html">Céracotta</a>
+    <nav><a href="./vaisselle.html">Vaisselle</a><a href="./vases.html">Vases</a></nav>
+  </header>
+
+  <main class="ad-container">
+    <section class="card">
+      <h1>Admin · Produits</h1>
+      <form id="createForm" class="grid">
+        <label>Titre<input name="title" required></label>
+        <label>Slug<input name="slug" required></label>
+        <label>Catégorie
+          <select name="categorySlug">
+            <option value="">(aucune)</option>
+            <option value="vaisselle">vaisselle</option>
+            <option value="vases">vases</option>
+          </select>
+        </label>
+        <label>Prix (centimes)<input name="price" type="number" value="2900" required></label>
+        <label>Stock<input name="stock" type="number" value="10" required></label>
+        <label class="full">Description<textarea name="description"></textarea></label>
+        <label class="full">Images (JSON) <textarea name="images">["/images/bols.png"]</textarea></label>
+        <label class="full">Caractéristiques (JSON) <textarea name="characteristics">[{"icon":"leaf","text":"Émaillage artisanal"}]</textarea></label>
+        <div class="actions"><button class="btn primary">Créer</button></div>
+      </form>
+      <div id="createMsg" class="msg"></div>
+    </section>
+
+    <section class="card">
+      <h2>Liste des produits</h2>
+      <table class="table" id="productsTable">
+        <thead><tr><th>Titre</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Commandes</h2>
+      <table class="table" id="ordersTable">
+        <thead><tr><th>Date</th><th>Client</th><th>Montant</th><th>Statut</th><th>Paiement</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Utilisateurs</h2>
+      <table class="table" id="usersTable">
+        <thead><tr><th>Email</th><th>Nom</th><th>Rôle</th><th>Créé le</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+ <script type="module">
+  import { mountShell } from './js/ui/shell.js';
+  import { mountAuthPanel } from './js/ui/auth.js';
+  mountShell();
+  mountAuthPanel(); // <— active login / register dans le side-panel compte
+  import './js/pages/admin.page.js'; // ou la page correspondante
+</script>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Mon compte – Céracotta</title>
+  <link rel="stylesheet" href="./css/account.css"/>
+</head>
+<body class="page-account">
+  <header class="ac-header">
+    <a class="brand" href="./index.html">Céracotta</a>
+    <nav><a href="./vaisselle.html">Vaisselle</a><a href="./vases.html">Vases</a></nav>
+  </header>
+
+  <main class="ac-container">
+    <section class="card">
+      <h1>Mon profil</h1>
+      <form id="meForm" class="grid">
+        <label>Prénom<input name="firstName"></label>
+        <label>Nom<input name="lastName"></label>
+        <label>Nom d’utilisateur<input name="username"></label>
+        <label class="full">Adresse 1<input name="addressLine1"></label>
+        <label class="full">Adresse 2<input name="addressLine2"></label>
+        <label>CP<input name="zip"></label>
+        <label>Ville<input name="city"></label>
+        <label>Pays<input name="country" value="CH"></label>
+        <div class="actions"><button class="btn primary">Enregistrer</button></div>
+      </form>
+      <div id="meMsg" class="msg"></div>
+    </section>
+
+    <section class="card">
+      <h2>Mes commandes</h2>
+      <table class="table" id="ordersTable">
+        <thead><tr><th>Date</th><th>Montant</th><th>Statut</th><th>Paiement</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+<script type="module" src="/js/boot.js"></script>
+<script type="module" src="/js/pages/account.page.js"></script>
+
+</body>
+</html>
