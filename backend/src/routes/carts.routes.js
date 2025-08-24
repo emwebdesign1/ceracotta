@@ -1,11 +1,31 @@
 import { Router } from 'express';
-import { verifyJWT } from '../middleware/auth.js';
-import { myCart, addItem, updateQty, removeItem, clearCart } from '../controllers/carts.controller.js';
+import { requireAuth as auth } from '../middleware/auth.js';
+import {
+  getMyCart,
+  addToCart,
+  updateCartItem,
+  removeCartItem,
+  clearCart
+} from '../controllers/carts.controller.js';
+
 const r = Router();
-r.use(verifyJWT);
-r.get('/my', myCart);
-r.post('/add', addItem);
-r.patch('/update', updateQty);
-r.delete('/item/:id', removeItem);
-r.delete('/clear', clearCart);
+
+// Toutes les routes du panier nécessitent l’auth
+r.use(auth);
+
+// Récupérer le panier courant de l'utilisateur
+r.get('/', getMyCart);
+
+// Ajouter un produit au panier
+r.post('/items', addToCart);
+
+// Modifier la quantité d’un item
+r.patch('/items/:itemId', updateCartItem);
+
+// Supprimer un item
+r.delete('/items/:itemId', removeCartItem);
+
+// Vider le panier
+r.delete('/', clearCart);
+
 export default r;

@@ -15,10 +15,10 @@ function render(itemsToAdd) {
         <img src="${product.images?.[0] || '/images/bols.png'}" alt="${product.title}" class="product-image"/>
       </a>
       <h3 class="product-title">${product.title}</h3>
-      <p class="product-price">CHF ${(product.price/100).toFixed(2)}</p>
+      <p class="product-price">CHF ${(product.price / 100).toFixed(2)}</p>
       <div class="color-dots">
-        ${(product.variants||[]).slice(0,3).map(v => `<span class="dot" style="background:${v.color||'#ccc'}"></span>`).join('')}
-        ${product.variants?.length>3 ? `<span class="dot more-dot">+${product.variants.length-3}</span>`:''}
+        ${(product.variants || []).slice(0, 3).map(v => `<span class="dot" style="background:${v.color || '#ccc'}"></span>`).join('')}
+        ${product.variants?.length > 3 ? `<span class="dot more-dot">+${product.variants.length - 3}</span>` : ''}
       </div>
     `;
     grid.appendChild(card);
@@ -35,7 +35,8 @@ async function load() {
 }
 
 sortSelect?.addEventListener('change', async () => {
-  sort = sortSelect.value === 'price-asc' ? 'price' : ' -price';
+  sort = sortSelect.value === 'price-asc' ? 'price' : '-price';
+
   page = 1; done = false; items = []; grid.innerHTML = '';
   await load();
 });

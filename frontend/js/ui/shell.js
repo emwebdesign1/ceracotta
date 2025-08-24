@@ -1,4 +1,5 @@
 import { getCart } from '../api.js';
+import { state } from '../state.js';
 import { renderCartPanel } from './cartPanel.js';
 
 function injectPanelsIfMissing() {
@@ -89,5 +90,17 @@ function mountShell() {
   // Menu Collections
   link?.addEventListener("click", (e) => { e.preventDefault(); dropdown?.classList.toggle("open"); });
 }
+
+document.getElementById("open-compte")?.addEventListener("click", e => {
+  e.preventDefault();
+  if (state.user) {
+    // si connecté → redirection
+    location.href = state.user.role === 'ADMIN' ? '/admin.html' : '/account.html';
+  } else {
+    openPanel("compte");
+  }
+});
+document.getElementById("open-favoris")?.addEventListener("click", e => { e.preventDefault(); openPanel("favoris"); });
+document.getElementById("open-panier") ?.addEventListener("click", e => { e.preventDefault(); openPanel("panier");  });
 
 export { mountShell };

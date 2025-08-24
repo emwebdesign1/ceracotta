@@ -80,3 +80,6 @@ export function renderCartPanel(cart) {
 
   // (checkout sera branché au backend: intent + confirm)
 }
+root.querySelector('.checkout')?.addEventListener('click', () => {
+  location.href = '/checkout.html';
+});

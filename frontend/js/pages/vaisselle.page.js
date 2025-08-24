@@ -35,7 +35,7 @@ async function load() {
 }
 
 sortSelect?.addEventListener('change', async () => {
-  sort = sortSelect.value === 'price-asc' ? 'price' : ' -price';
+  sort = sortSelect.value === 'price-asc' ? 'price' : '-price';
   page = 1; done = false; items = []; grid.innerHTML = '';
   await load();
 });
