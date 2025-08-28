@@ -1,12 +1,8 @@
 import { Router } from 'express';
-import { list, bySlug } from '../controllers/products.controller.js'; // (ou le nom de ton fichier)
+import { listProducts, getProduct } from '../controllers/products.controller.js';
+const router = Router();
 
-const r = Router();
+router.get('/', listProducts);
+router.get('/:slug', getProduct);
 
-// Liste paginée + filtres
-r.get('/', list);
-
-// Détail produit par slug
-r.get('/:slug', bySlug);
-
-export default r;
+export default router;

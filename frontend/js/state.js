@@ -1,5 +1,5 @@
-// === Favoris (localStorage) ===
-const LS = {
+// === State global (cart, auth, favoris) ===
+export const LS = {
   CART:  'cart.v1',
   USER:  'user.v1',
   TOKEN: 'token.v1',
@@ -13,6 +13,7 @@ export const state = {
   favs: []
 };
 
+// Boot depuis localStorage
 (function boot() {
   try { state.cart = JSON.parse(localStorage.getItem(LS.CART) || '{"items":[]}'); } catch {}
   try { state.user = JSON.parse(localStorage.getItem(LS.USER) || 'null'); } catch {}
@@ -20,25 +21,38 @@ export const state = {
   try { state.favs = JSON.parse(localStorage.getItem(LS.FAVS) || '[]'); } catch {}
 })();
 
+// === Auth
 export const authHeaders = () =>
   state.accessToken ? { Authorization: `Bearer ${state.accessToken}` } : {};
 
+export function setAuth({ user = null, accessToken = null } = {}) {
+  state.user = user;
+  state.accessToken = accessToken;
+
+  if (user) localStorage.setItem(LS.USER, JSON.stringify(user));
+  else localStorage.removeItem(LS.USER);
+
+  if (accessToken) localStorage.setItem(LS.TOKEN, accessToken);
+  else localStorage.removeItem(LS.TOKEN);
+
+  // nettoyage d’anciennes clés si jamais
+  localStorage.removeItem('token');
+  localStorage.removeItem('accessToken');
+
+  document.dispatchEvent(new CustomEvent('auth:changed', { detail: { user: state.user } }));
+}
+
+export function clearAuth() {
+  setAuth({ user: null, accessToken: null });
+}
+
+// === Panier
 export function saveCart() {
   localStorage.setItem(LS.CART, JSON.stringify(state.cart));
   document.dispatchEvent(new CustomEvent('cart:changed', { detail: state.cart }));
 }
 
-export function setAuth({ user, accessToken }) {
-  state.user = user || null;
-  state.accessToken = accessToken || null;
-  if (user) localStorage.setItem(LS.USER, JSON.stringify(user));
-  else localStorage.removeItem(LS.USER);
-  if (accessToken) localStorage.setItem(LS.TOKEN, accessToken);
-  else localStorage.removeItem(LS.TOKEN);
-  document.dispatchEvent(new CustomEvent('auth:changed', { detail: { user: state.user } }));
-}
-
-// --- favoris
+// === Favoris
 export function getFavorites() {
   return Array.isArray(state.favs) ? state.favs : [];
 }

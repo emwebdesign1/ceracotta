@@ -1,27 +1,25 @@
-// /js/api.js
-// /js/api.js
-import { state, authHeaders, saveCart, setAuth } from './state.js';
+// API centralisée + mapping token ←→ accessToken
+import { state, authHeaders, saveCart, setAuth, clearAuth } from './state.js';
 
-// Mets FALSE pour activer les vraies requêtes côté backend
-const MOCK = { products: true, cart: true, auth: false };
+// Active les mocks uniquement si besoin
+const MOCK = { products: false, cart: false, auth: false };
 
-
-// -------- Produits (mock)
-export async function getProducts({ category, q='', sort='-createdAt', page=1, limit=12 } = {}) {
-  if (MOCK) {
+// -------- Produits
+export async function getProducts({ category, q = '', sort = '-createdAt', page = 1, limit = 12 } = {}) {
+  if (MOCK.products) {
     const items = [
       { id:'p1', slug:'assiette-email-beige', title:'Assiette émail beige', price:2900, images:['/images/bols.png'], variants:[{id:'v1', color:'Beige', size:'20cm', price:2900, stock:20}] },
       { id:'p2', slug:'bol-texture-mat',     title:'Bol texturé mat',     price:3490, images:['/images/bols.png'], variants:[{id:'v2', color:'Noir',  size:'Standard', price:3490, stock:12}] },
     ];
     return { items, total: items.length };
   }
-  const params = new URLSearchParams({ q, sort, page, limit, ...(category?{category}:{}) });
+  const params = new URLSearchParams({ q, sort, page, limit, ...(category ? { category } : {}) });
   const res = await fetch(`/api/products?${params.toString()}`);
   return res.json();
 }
 
 export async function getProductBySlug(slug) {
-  if (MOCK) {
+  if (MOCK.products) {
     return {
       id:'p1',
       title:'Assiette Céramique Émaillée',
@@ -40,51 +38,59 @@ export async function getProductBySlug(slug) {
   return res.json();
 }
 
-/* ===== Auth réelle ===== */
+/* ===== Auth ===== */
 export async function register(payload) {
   if (MOCK.auth) {
-    const data = { user:{ id:'u1', email:payload.email, role:'CUSTOMER', username: payload.username }, accessToken:'FAKE_TOKEN' };
-    setAuth(data); return data;
+    const data = { user:{ id:'u1', email:payload.email, role:'CUSTOMER', username: payload.username, firstName:payload.firstName, lastName:payload.lastName, phone:payload.phone }, token:'FAKE_TOKEN' };
+    setAuth({ user: data.user, accessToken: data.token });
+    return data;
   }
   const res = await fetch('/api/auth/register', {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json' },
-    body: JSON.stringify(payload)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
   });
-  const data = await res.json(); if (res.ok) setAuth(data); return data;
+  const data = await res.json().catch(() => ({}));
+  if (res.ok) setAuth({ user: data.user, accessToken: data.token }); // map token -> accessToken
+  return data;
 }
 
 export async function login({ email, password }) {
   if (MOCK.auth) {
-    const data = { user:{ id:'u1', email, role:'CUSTOMER', username:'emma' }, accessToken:'FAKE_TOKEN' };
-    setAuth(data); return data;
+    const data = { user:{ id:'u1', email, role:'CUSTOMER', username:'emma' }, token:'FAKE_TOKEN' };
+    setAuth({ user: data.user, accessToken: data.token });
+    return data;
   }
   const res = await fetch('/api/auth/login', {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json' },
-    body: JSON.stringify({ email, password })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
   });
-  const data = await res.json(); if (res.ok) setAuth(data); return data;
+  const data = await res.json().catch(() => ({}));
+  if (res.ok) setAuth({ user: data.user, accessToken: data.token });
+  return data;
 }
 
 export async function me() {
-  const res = await fetch('/api/auth/me', { headers: { ...authHeaders() }});
-  return res.ok ? res.json() : { user:null };
+  const res = await fetch('/api/auth/me', { headers: { ...authHeaders() } });
+  return res.ok ? res.json() : { user: null };
 }
 
-export function logout() { setAuth({ user:null, accessToken:null }); }
+export function logout() {
+  clearAuth();
+}
 
-// -------- Panier
+/* ===== Panier ===== */
 const safeId = () => (crypto?.randomUUID?.() || ('it_' + Math.random().toString(36).slice(2)));
 
 export async function getCart() {
-  if (MOCK) return state.cart;
-  const res = await fetch('/api/carts/my', { headers: { ...authHeaders() }});
+  if (MOCK.cart) return state.cart;
+  const res = await fetch('/api/carts/my', { headers: { ...authHeaders() } });
   return res.json();
 }
 
-export async function addToCart({ productId, variantId, quantity=1, title, unitPrice, id, slug, image }) {
-  if (MOCK) {
+export async function addToCart({ productId, variantId, quantity = 1, title, unitPrice, id, slug, image }) {
+  if (MOCK.cart) {
     const key = variantId || productId || id;
     const found = state.cart.items.find(it => (it.variantId || it.productId || it.id) === key);
     if (found) found.quantity += quantity;
@@ -98,9 +104,9 @@ export async function addToCart({ productId, variantId, quantity=1, title, unitP
     return structuredClone(state.cart);
   }
   const res = await fetch('/api/carts/add', {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json', ...authHeaders() },
-    body: JSON.stringify({ productId, variantId, quantity })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ productId, variantId, quantity }),
   });
   const cart = await res.json();
   saveCart();
@@ -108,30 +114,31 @@ export async function addToCart({ productId, variantId, quantity=1, title, unitP
 }
 
 export async function updateCartItem({ itemId, quantity }) {
-  if (MOCK) {
+  if (MOCK.cart) {
     const it = state.cart.items.find(i => i.id === itemId);
     if (it) it.quantity = Math.max(1, quantity);
     saveCart();
     return structuredClone(state.cart);
   }
-  await fetch('/api/carts/update', { method:'PATCH',
-    headers:{ 'Content-Type':'application/json', ...authHeaders() },
-    body: JSON.stringify({ itemId, quantity })
+  await fetch('/api/carts/update', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ itemId, quantity }),
   });
   const cart = await getCart(); saveCart(); return cart;
 }
 
 export async function removeCartItem(itemId) {
-  if (MOCK) {
+  if (MOCK.cart) {
     state.cart.items = state.cart.items.filter(i => i.id !== itemId);
     saveCart(); return structuredClone(state.cart);
   }
-  await fetch(`/api/carts/item/${itemId}`, { method:'DELETE', headers:{ ...authHeaders() }});
+  await fetch(`/api/carts/item/${itemId}`, { method: 'DELETE', headers: { ...authHeaders() } });
   const cart = await getCart(); saveCart(); return cart;
 }
 
 export async function clearCart() {
-  if (MOCK) { state.cart.items = []; saveCart(); return structuredClone(state.cart); }
-  await fetch('/api/carts/clear', { method:'DELETE', headers:{ ...authHeaders() }});
+  if (MOCK.cart) { state.cart.items = []; saveCart(); return structuredClone(state.cart); }
+  await fetch('/api/carts/clear', { method: 'DELETE', headers: { ...authHeaders() } });
   const cart = await getCart(); saveCart(); return cart;
 }

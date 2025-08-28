@@ -1,63 +1,59 @@
 // src/controllers/auth.controller.js
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import prisma from '../lib/prisma.js';
 import { z } from 'zod';
-import { prisma } from '../config/db.js';
 
-const { JWT_SECRET = 'dev-secret', JWT_EXPIRES_IN = '7d' } = process.env;
-
-/* ===== Schemas de validation ===== */
 const registerSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8, 'Mot de passe: min 8 caractères'),
-  firstName: z.string().optional(),
-  lastName: z.string().optional()
+  firstName: z.string().min(1, 'Prénom requis'),
+  lastName:  z.string().min(1, 'Nom requis'),
+  username:  z.string().min(3, 'Nom d’utilisateur trop court').max(32),
+  phone:     z.string().min(6, 'Téléphone invalide').max(32),
+  email:     z.string().email('Email invalide'),
+  password:  z.string().min(8, 'Mot de passe trop court (≥ 8)'),
 });
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1)
+  email:    z.string().email('Email invalide'),
+  password: z.string().min(1, 'Mot de passe requis'),
 });
 
-/* ===== Helpers ===== */
-function signToken(user) {
-  return jwt.sign(
-    { id: user.id, role: user.role, email: user.email },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
+// On retire le hash avant de renvoyer l'utilisateur
+function sanitizeUser(u) {
+  if (!u) return null;
+  const { passwordHash, password, ...safe } = u;
+  return safe;
 }
 
-/* ===== Controllers ===== */
 export async function register(req, res) {
   try {
     const data = registerSchema.parse(req.body);
 
-    const exists = await prisma.user.findUnique({ where: { email: data.email } });
-    if (exists) {
-      return res.status(409).json({ error: 'Email déjà utilisé' });
-    }
+    const [byEmail, byUsername] = await Promise.all([
+      prisma.user.findUnique({ where: { email: data.email } }),
+      prisma.user.findUnique({ where: { username: data.username } }),
+    ]);
+    if (byEmail)    return res.status(400).json({ message: 'Email déjà utilisé' });
+    if (byUsername) return res.status(400).json({ message: 'Nom d’utilisateur déjà pris' });
 
-    const passwordHash = await bcrypt.hash(data.password, 10);
+    const hash = await bcrypt.hash(data.password, 10);
+
     const user = await prisma.user.create({
       data: {
-        email: data.email,
-        passwordHash,
-        firstName: data.firstName ?? null,
-        lastName: data.lastName ?? null
-        // role par défaut = CUSTOMER (défini dans Prisma)
+        email:       data.email,
+        passwordHash: hash,                  // ← stocke dans passwordHash
+        firstName:   data.firstName,
+        lastName:    data.lastName,
+        username:    data.username,
+        phone:       data.phone,
+        role:        'CUSTOMER',
       },
-      select: { id: true, email: true, role: true }
     });
 
-    const token = signToken(user);
-    return res.status(201).json({ token, user });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    return res.json({ user: sanitizeUser(user), token });
   } catch (err) {
-    if (err?.name === 'ZodError') {
-      return res.status(400).json({ error: 'Validation', details: err.errors });
-    }
-    console.error('register error:', err);
-    return res.status(500).json({ error: 'Erreur serveur' });
+    return res.status(400).json({ message: err?.message || 'Requête invalide' });
   }
 }
 
@@ -66,36 +62,24 @@ export async function login(req, res) {
     const { email, password } = loginSchema.parse(req.body);
 
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: 'Identifiants invalides' });
+    if (!user) return res.status(400).json({ message: 'Identifiants incorrects' });
 
+    // ⚠️ corrige: compare avec user.passwordHash
     const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) return res.status(401).json({ error: 'Identifiants invalides' });
+    if (!ok) return res.status(400).json({ message: 'Identifiants incorrects' });
 
-    const safeUser = { id: user.id, email: user.email, role: user.role };
-    const token = signToken(safeUser);
-    return res.json({ token, user: safeUser });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    return res.json({ user: sanitizeUser(user), token });
   } catch (err) {
-    if (err?.name === 'ZodError') {
-      return res.status(400).json({ error: 'Validation', details: err.errors });
-    }
-    console.error('login error:', err);
-    return res.status(500).json({ error: 'Erreur serveur' });
+    return res.status(400).json({ message: err?.message || 'Requête invalide' });
   }
 }
 
 export async function me(req, res) {
-  try {
-    if (!req.user?.id) return res.status(401).json({ error: 'Non authentifié' });
+  // recharge l’utilisateur depuis l’ID contenu dans le JWT (mis par le middleware)
+  const userId = req.user?.id || req.userId;
+  if (!userId) return res.status(401).json({ message: 'Non authentifié' });
 
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
-      select: { id: true, email: true, role: true, firstName: true, lastName: true }
-    });
-    if (!user) return res.status(404).json({ error: 'Utilisateur introuvable' });
-
-    return res.json({ user });
-  } catch (err) {
-    console.error('me error:', err);
-    return res.status(500).json({ error: 'Erreur serveur' });
-  }
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  return res.json({ user: sanitizeUser(user) });
 }
